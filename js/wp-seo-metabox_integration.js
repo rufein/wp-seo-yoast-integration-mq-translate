@@ -408,7 +408,7 @@ jQuery(document).ready(function () {
 		});
 		
 		jQuery('#qtrans_title_' + lang).keyup(function () {
-			integr_yst_updateTitle(true, lang);
+			integr_yst_updateTitle(false, lang);
 			integr_yst_updateDesc(lang);
 		});
 		
@@ -452,7 +452,8 @@ jQuery(document).ready(function () {
 	
 	
 	// Metabox langs TABS
-	intgr_yst_languages_tabs();
+	// intgr_yst_languages_tabs();
+	jQuery("#wpseo-metabox-tabs-div").tabs();
 
 });
 

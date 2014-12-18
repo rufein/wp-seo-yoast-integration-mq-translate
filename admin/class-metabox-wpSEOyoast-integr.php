@@ -47,13 +47,14 @@ if ( class_exists( 'WPSEO_Metabox' ) && ! class_exists( 'WPSEO_Metabox_wpSEOyoas
 			
 			if ( $pagenow != 'edit.php' ) {
 				
-				wp_enqueue_style( 'metabox-integration', plugins_url(  '/' . IYWSM . '/css/metabox-integration' . '.css' ), array(), WPSEO_VERSION );
+				wp_enqueue_style( 'metabox-integration', plugins_url(  '/' . IYWSM . '/css/metabox-integration' . '.css' ), array(), IYWSM_VERSION );
 				
 				wp_enqueue_script( 'wp-seo-metabox_integration', plugins_url( '/' . IYWSM . '/js/wp-seo-metabox_integration'  . '.js'), array(
 				'jquery',
 				'jquery-ui-core',
 				'jquery-ui-autocomplete',
-				), WPSEO_VERSION, true );
+				'jquery-ui-tabs',
+				), IYWSM_VERSION , true );
 			
 				
 				// Text strings to pass to metabox for keyword analysis
@@ -69,6 +70,9 @@ if ( class_exists( 'WPSEO_Metabox' ) && ! class_exists( 'WPSEO_Metabox_wpSEOyoas
 			
 			// Remove action form the parent class
 			remove_action( 'post_submitbox_misc_actions', array( $GLOBALS['old_wpseo_metabox']  , 'publish_box' ));
+			
+			// Remove action to avoid duplicate actions in bulk actions
+			remove_action( 'restrict_manage_posts', array( $GLOBALS['old_wpseo_metabox'] , 'posts_filter_dropdown' ));
 			
 			$post_types = get_post_types( array( 'public' => true ), 'names' );
 			if ( is_array( $post_types ) && $post_types !== array() ) {
@@ -147,14 +151,25 @@ if ( class_exists( 'WPSEO_Metabox' ) && ! class_exists( 'WPSEO_Metabox_wpSEOyoas
 
 			$options = WPSEO_Options::get_all();
 			
-			?> <div class="wpseo-metabox-tabs-div">  
-					<ul class="wpseo-metabox-select-langs-tabs">
+			
+			?> 
+				<div class="attention">
+					<h2> <?php echo __("Tips to use WP SEO by Yoast Integration with mqtranslate") ?></h2>
+					<ul>
+						<li><?php echo __("The plugin starts to work when you fill fields.")?></li>
+						<li><?php echo __("This plugin is an Alpha Version. It needs test.")?></li>
+						<li><?php echo __("If you find a bug or you want to improve the plugin, please, report it in the <a href=\"https://wordpress.org/support/plugin/wp-seo-yoast-integration-mq-translate\">support forum</a>.")?></li>
+					</ul>
+				</div>
+			
+				<div class="wpseo-metabox-tabs-div" id="wpseo-metabox-tabs-div">  
+					<ul class="wpseo-metabox-select-langs-tabs" id="wpseo-metabox-select-langs-tabs">
 			<?php 
 			// Header of tabs
 			foreach ($this->langs as $l){
 				?>
 					<li class="wpseo-lang-<?php echo $l ?>">
-						<a class="wpseo_tablink_lang" tab="#wpseo-metabox-lang-tabs-div-<?php echo $l ?>">
+						<a class="wpseo_tablink_lang" tab="#wpseo-metabox-lang-tabs-div-<?php echo $l ?>" href="#wpseo-metabox-lang-tabs-div-<?php echo $l ?>">
 							<?php echo '<img src="' . trailingslashit(WP_CONTENT_URL) . $q_config['flag_location'] . $q_config['flag'][$l] . '" alt="' . $q_config['language_name'][$l] . '"/>'; ?>
 							<?php echo qtrans_getLanguageName($l) ?>
 						</a>
