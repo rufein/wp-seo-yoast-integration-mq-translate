@@ -27,7 +27,8 @@ function integr_yst_testFocusKw(lang) {
 		html += '<li>' + wpseoMetaboxL10n.page_title_text + ptest(jQuery('#wpseosnippet_title-' + lang).text(), p) + '</li>';
 		html += '<li>' + wpseoMetaboxL10n.page_url_text + ptest(url, p2) + '</li>';
 		if (jQuery('#content').length) {
-			html += '<li>' + wpseoMetaboxL10n.content_text + ptest(jQuery('#content').val(), p) + '</li>';
+			var content = qtrans_use(lang, jQuery('#content').val());
+			html += '<li>' + wpseoMetaboxL10n.content_text + ptest(content, p) + '</li>';
 		}
 		html += '<li>' + wpseoMetaboxL10n.meta_description_text + ptest(metadesc, p) + '</li>';
 		html += '</ul>';
