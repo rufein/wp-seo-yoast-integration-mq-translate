@@ -1,7 +1,15 @@
 
 function integr_yst_testFocusKw(lang) {
+	
+	// Suffix to add when no default language
+	var suffix = "";
+	var default_lang = wpseoMetaboxIntegration["default_lang"];
+	if (lang != default_lang){
+		suffix = "-" + lang;
+	}
+	
 	// Retrieve focus keyword and trim
-	var focuskw = jQuery.trim(jQuery('#' + wpseoMetaboxL10n.field_prefix + 'focuskw-' + lang).val());
+	var focuskw = jQuery.trim(jQuery('#' + wpseoMetaboxL10n.field_prefix + 'focuskw' + suffix ).val());
 	focuskw = yst_escapeFocusKw(focuskw).toLowerCase();
 
 	if (jQuery('#editable-post-name-full').length) {
@@ -14,7 +22,7 @@ function integr_yst_testFocusKw(lang) {
 	var p2 = new RegExp(focuskwNoDiacritics.replace(/\s+/g, "[-_\\\//]"), 'gim');
 
 	var focuskwresults = jQuery('#wpseo-metabox-lang-tabs-div-' + lang + ' #focuskwresults');
-	var metadesc = jQuery('#wpseosnippet-' + lang).find('.desc span.content').text();
+	var metadesc = jQuery('#wpseosnippet' + suffix).find('.desc span.content').text();
 
 	if (focuskw != '') {
 		var html = '<p>' + wpseoMetaboxL10n.keyword_header + '</p>';
@@ -24,7 +32,7 @@ function integr_yst_testFocusKw(lang) {
 		if (title.length) {
 			html += '<li>' + wpseoMetaboxL10n.article_header_text + ptest( title , p ) + '</li>';
 		}
-		html += '<li>' + wpseoMetaboxL10n.page_title_text + ptest(jQuery('#wpseosnippet_title-' + lang).text(), p) + '</li>';
+		html += '<li>' + wpseoMetaboxL10n.page_title_text + ptest(jQuery('#wpseosnippet_title' + suffix).text(), p) + '</li>';
 		html += '<li>' + wpseoMetaboxL10n.page_url_text + ptest(url, p2) + '</li>';
 		if (jQuery('#content').length) {
 			var content = qtrans_use(lang, jQuery('#content').val());
@@ -448,6 +456,37 @@ jQuery(document).ready(function () {
 		if ( selector ){
 			jQuery(selector + " .wpseotab:first-of-type").addClass( "active" );
 		}
+	});
+	
+	// Hack in focus result default lang: The whole content is analized, 
+	// if the focus keyword is repeated in different languages
+	// it will be count.
+	jQuery('#wpseo-metabox-lang-tabs-div-' + default_lang + ' #focuskwresults').empty();
+	integr_yst_testFocusKw(default_lang);
+	
+	jQuery('#qtrans_title_' + default_lang).keyup(function () {
+		integr_yst_testFocusKw(default_lang);
+	});
+	jQuery('#' + wpseoMetaboxL10n.field_prefix + 'focuskw').keyup(function () {
+		integr_yst_testFocusKw(default_lang);
+	});
+	jQuery('#' + wpseoMetaboxL10n.field_prefix + 'focuskw').keydown(function () {
+		integr_yst_testFocusKw(default_lang);
+	});
+	jQuery('#' + wpseoMetaboxL10n.field_prefix + 'focuskw').focusout(function () {
+		integr_yst_testFocusKw(default_lang);
+	});
+	jQuery('#' + wpseoMetaboxL10n.field_prefix + 'title').keyup(function () {
+		integr_yst_testFocusKw(default_lang);
+	});
+	jQuery('#' + wpseoMetaboxL10n.field_prefix + 'metadesc').keyup(function () {
+		integr_yst_testFocusKw(default_lang);
+	});
+	jQuery('#excerpt').keyup(function () {
+		integr_yst_testFocusKw(default_lang);
+	});
+	jQuery('#content').focusout(function () {
+		integr_yst_testFocusKw(default_lang);
 	});
 
 });
